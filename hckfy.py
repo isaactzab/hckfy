@@ -21,6 +21,8 @@ class Hackify(object):
 		splited = self.spfy_nw_playing()
 		if(splited):
 			print splited
+		else:
+			print "Spotify is inactive"
 
 	def spfy_wnd_title(self):
 		titles = []
@@ -39,10 +41,15 @@ class Hackify(object):
 	def spfy_nw_playing(self):
 		spfy_titles = self.spfy_wnd_title()
 		if(len(spfy_titles) > 0):
-			wnd_caption = unicodedata.normalize('NFKD', self.spfy_wnd_title()[0]).encode('ascii','ignore')
-			t = re.search(r"^(?P<app>Spotify)?(?:\s\-\s)?(?P<artist>[\w\s\'\-\.']+)?\s.\s?(?P<song>.+)", wnd_caption)
+			# wnd_caption = unicodedata.normalize('NFKD', self.spfy_wnd_title()[0]).encode('ascii','ignore')
+			wnd_caption = self.spfy_wnd_title()[0]
+			t = re.search(r"^(?P<app>Spotify)?(?:\s\-\s)?(?P<artist>[\w\s\'\.\-'']+)?(?:\s.\s)?(?P<song>.+)", wnd_caption)
 			if(t != None):
 				t = t.groupdict()
+				t['app'] = unicodedata.normalize('NFKD', t['app']).encode('ascii','ignore')
+				t['artist'] = unicodedata.normalize('NFKD', t['artist']).encode('ascii','ignore')
+				t['song'] = unicodedata.normalize('NFKD', t['song']).encode('ascii','ignore')
+
 				if(t['app'] == "Spotify" and t['song'] not in sponsors):
 					return t
 				else:
