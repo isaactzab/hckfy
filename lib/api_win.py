@@ -123,18 +123,67 @@ class IMMDeviceEnumerator(comtypes.IUnknown):
     ]
 
 
-enumerator = comtypes.CoCreateInstance( 
-    CLSID_MMDeviceEnumerator,
-    IMMDeviceEnumerator,
-    comtypes.CLSCTX_INPROC_SERVER
-)
 
-print enumerator
-endpoint = enumerator.GetDefaultAudioEndpoint( 0, 1 )
-print endpoint
-volume = endpoint.Activate( IID_IAudioEndpointVolume, comtypes.CLSCTX_INPROC_SERVER, None )
-print volume
-print volume.GetMasterVolumeLevel()
-print volume.GetVolumeRange()
-# volume.SetMasterVolumeLevel(-20.0, None)
-volume.SetMute(True, None)
+class Audio :
+    enumerator = comtypes.CoCreateInstance( 
+        CLSID_MMDeviceEnumerator,
+        IMMDeviceEnumerator,
+        comtypes.CLSCTX_INPROC_SERVER
+    )
+    endpoint = enumerator.GetDefaultAudioEndpoint( 0, 1 )
+    volume = endpoint.Activate( IID_IAudioEndpointVolume, comtypes.CLSCTX_INPROC_SERVER, None )
+    def SetMasterVolumeLevel(self,fLevelDB):
+        return self.volume.SetMasterVolumeLevel(fLevelDB, None)
+
+    def SetMasterVolumeLevelScalar(self,fLevelDB):
+        return self.volume.SetMasterVolumeLevelScalar(fLevelDB, None)
+
+    def GetMasterVolumeLevel(self):
+        return self.volume.GetMasterVolumeLevel()
+
+    def GetMasterVolumeLevelScalar(self):
+        return self.volume.GetMasterVolumeLevelScalar()
+
+    def SetChannelVolumeLevel(self,nChannel,fLevelDB):
+        return self.volume.SetChannelVolumeLevel(nChannel,fLevelDB,None)
+
+    def SetChannelVolumeLevelScalar(self,nChannel,fLevelDB):
+        return self.volume.SetChannelVolumeLevelScalar(nChannel,fLevelDB,None)
+
+    def GetChannelVolumeLevel(self,nChannel):
+        return self.volume.GetChannelVolumeLevel(nChannel)
+
+    def GetChannelVolumeLevelScalar(self,nChannel):
+        return self.volume.GetChannelVolumeLevelScalar(nChannel)
+
+    def SetMute(self,bMute):
+        return self.volume.SetMute(bMute,None)
+
+    def GetMute(self):
+        return self.volume.GetMute()
+
+    def GetVolumeStepInfo(self):
+        return self.volume.GetVolumeStepInfo()
+
+    def VolumeStepUp(self):
+        return self.volume.VolumeStepUp(None)
+
+    def VolumeStepDown(self):
+        return self.volume.VolumeStepDown(None)
+
+    def QueryHardwareSupport(self):
+        return self.volume.QueryHardwareSupport()
+
+    def GetVolumeRange(self,):
+        return self.volume.GetVolumeRange()
+
+audio = Audio()
+print audio.GetMasterVolumeLevelScalar()
+
+# print enumerator
+# print endpoint
+# print volume
+# print volume.GetMasterVolumeLevel()
+# print volume.GetVolumeRange()
+# # volume.SetMasterVolumeLevel(-20.0, None)
+# volume.SetMute(True, None)
