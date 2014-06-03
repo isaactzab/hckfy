@@ -4,7 +4,7 @@ from lib.spotify_win import spotify_win
 from lib.audio_win import *
 from lib.spotify_remote import spotify_remote
 
-sponsors = ["Warner", "Spotify", "Warner Music"]
+sponsors = ["Warner", "Spotify", "Warner Music", "Movistar", "Hyundai"]
 
 class Hackify(object):
 	def __init__(self):
@@ -19,18 +19,16 @@ class Hackify(object):
 			status = spotify.status()
 			compare = set(lastnowplaying.items()) & set(status["nowplaying"].items())
 			lastnowplaying = status["nowplaying"]
+			print lastnowplaying
 
-			if(len(compare) == 0):
-				print lastnowplaying
-				if(status["app"] != None) and (status["nowplaying"] != None and status["nowplaying"]["sponsor"] != None):
-					audio.SetMute(True)
-					remote.unpause()
-					lastaudiostatus = False
-				elif( lastaudiostatus == False):
-					audio.SetMute(False)
-					lastaudiostatus = True
-
-
+			# if(len(compare) == 0):
+			if(status["app"] != None) and (status["nowplaying"] != None and status["nowplaying"]["sponsor"] != None):
+				audio.SetMute(True)
+				remote.unpause()
+				lastaudiostatus = False
+			elif( lastaudiostatus == False):
+				audio.SetMute(False)
+				lastaudiostatus = True
 			try:
 				time.sleep(1)
 			except:
