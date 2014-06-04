@@ -4,7 +4,7 @@ from lib.spotify_win import spotify_win
 from lib.audio_win import *
 from lib.spotify_remote import spotify_remote
 
-sponsors = ["Warner", "Spotify", "Warner Music", "Movistar", "Hyundai"]
+sponsors = ["Spotify", "Warner", "Warner Music", "Movistar", "Hyundai", "HEB	", "Santander", "Nissan", "Samsung"]
 
 class Hackify(object):
 	def __init__(self):
