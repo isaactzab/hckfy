@@ -25,7 +25,8 @@ class spotify_remote:
         self.default_return_on = ['login', 'logout', 'play', 'pause', 'error', 'ap']
         self.origin_header = {'Origin': 'https://open.spotify.com'}
         self.oauth = self.__get('http://open.spotify.com/token')['t']
-        self.csrf = self.__get(self.__url('/simplecsrf/token.json'), None, self.origin_header)['token']
+        self.csrf = self.__get(self.__url('/simplecsrf/token.json'), None, self.origin_header)
+        self.csrf = self.csrf["token"] if ("token" in self.csrf.keys()) else ""
         
 
     def __get(self, url, params={}, headers={}, mode="json"):

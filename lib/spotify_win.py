@@ -9,9 +9,8 @@ GetWindowTextLength = ctypes.windll.user32.GetWindowTextLengthW
 IsWindowVisible = ctypes.windll.user32.IsWindowVisible
 
 class spotify_win():
-	sponsors = []
-	def __init__(self, sponsors):
-		self.sponsors = sponsors
+	def __init__(self):
+		pass
 	def get_window_titles(self):
 		titles = []
 		def foreach_window(hwnd, lParam):
@@ -40,17 +39,20 @@ class spotify_win():
 					if(np != None):
 						np = np.groupdict()
 						t['nowplaying'] = { 
-							"sponsor" : None,
+							# "sponsor" : None,
 							"artist" :unicodedata.normalize('NFKD', np['artist']).encode('ascii', 'ignore'),
 							"song" : unicodedata.normalize('NFKD', np['song']).encode('ascii', 'ignore')
 						}
-						if(t["nowplaying"]["artist"] in self.sponsors):
-							t["nowplaying"]["sponsor"] = t["nowplaying"]["artist"]
-							t["nowplaying"]["artist"] = None
-							t["nowplaying"]["Song"] = None
+						# if(t["nowplaying"]["artist"] in self.sponsors):
+						# 	t["nowplaying"]["sponsor"] = t["nowplaying"]["artist"]
+						# 	t["nowplaying"]["artist"] = None
+						# 	t["nowplaying"]["Song"] = None
 					else:
-						t["nowplaying"] = {"sponsor":None, "artist":None,"song":None}
+						# t["nowplaying"] = {"sponsor":None, "artist":None,"song":None}
+						t["nowplaying"] = {"artist":None,"song":None}
 				else:
-					t["nowplaying"] = {"sponsor":None, "artist":None,"song":None}
+					# t["nowplaying"] = {"sponsor":None, "artist":None,"song":None}
+					t["nowplaying"] = {"artist":None,"song":None}
 			return t
-		return {"app":False,"status":False,"nowplaying":{"sponsor":None, "artist":None,"song":None}}
+		# return {"app":False,"status":False,"nowplaying":{"sponsor":None, "artist":None,"song":None}}
+		return {"app":False,"status":False,"nowplaying":{"artist":None,"song":None}}
