@@ -11,6 +11,7 @@ class trayicon(TrayIcon):
 		self.setIcon(iconpath)
 		self.show()
 		self.fnOnBalloonClick = None
+		self.fnOnMouseHover = None
 	def about(self):
 		print "about"
 	def donate(self):
@@ -23,9 +24,13 @@ class trayicon(TrayIcon):
 	def onBalloonClick(self, hwnd, msg, wparam, lparam):
 		if self.fnOnBalloonClick != None:
 			self.fnOnBalloonClick()
+	def onMouseHover(self, hwnd, msg, wparam, lparam):
+		if self.fnOnMouseHover != None:
+			self.fnOnMouseHover()
 	def setOnBaloonClick(self, fn):
 		self.fnOnBalloonClick = fn
-
+	def setOnMouseHover(self, fn):
+		self.fnOnMouseHover = fn
 
 class Spotify(spotify_win):
 	def __init__(self, sponsors):
@@ -47,22 +52,27 @@ class Spotify(spotify_win):
 					return True
 		return False
 		# pass
+	def muteandplay(self,status=True):
+		self.audio.SetMute(status)
+		self.remote.unpause()
 	def Run(self):
+		lastaudiostatus = True
 		while True:
 			status = self.status()
 			compare = status == self.laststatus
 			self.laststatus = status
-			lastaudiostatus = True
 			if compare == False and status["app"] != None and status["nowplaying"] != None and (status["nowplaying"]["artist"] != None and status["nowplaying"]["song"] != None):
 				self.callback(status["nowplaying"])
 				if self.checkIfIsSponsor(status["nowplaying"]):
-					print "Blocking sponsor"
-					self.audio.SetMute(True)
-					self.remote.unpause()
+					print "Blocking " + status["nowplaying"]["artist"] + " - " + status["nowplaying"]["song"]
+					self.muteandplay()
+					# self.audio.SetMute(True)
+					# self.remote.unpause()
 					lastaudiostatus = False
 				elif lastaudiostatus == False:
 					print "Enabling audio"
-					self.audio.SetMute(False)
+					self.muteandplay(False)
+					# self.audio.SetMute(False)
 					lastaudiostatus = True
 			time.sleep(self.interval)
 
@@ -96,7 +106,8 @@ class Application:
 		self.spotify_daemon = None
 		self.lastspoti = None
 
-		self.tray.setOnBaloonClick(self.onBalloonClick)
+		self.tray.setOnBaloonClick(self.trayOnBalloonClick)
+		self.tray.setOnMouseHover(self.trayOnMouseHover)
 				
 		self.spotify.onSongChange(self.spotify_onSongChange)
 		self.spotify_daemon = threading.Thread(target = self.spotify.Run, name = "spotify_daemon")
@@ -113,10 +124,15 @@ class Application:
 		print spoti
 		self.tray.notify( spoti['artist'] + " - " +spoti['song'], "Click if this is a sponsor")
 		self.lastspoti = spoti
-	def onBalloonClick(self):
+	def trayOnBalloonClick(self):
 		if MessageBox('Sponsor reporter', 'Do you want report as sponsor?', 4 ) == 6:
+			self.spotify.muteandplay()
 			self.sponsors.append(self.lastspoti)
 			self.sponsors.save()
+	def trayOnMouseHover(self):
+		print self.spotify.status()
+		pass
+
 if __name__=='__main__':
 	App = Application()
 # cig0-0019c72bbbd0

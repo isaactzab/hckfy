@@ -102,6 +102,7 @@ class TrayIcon:
 		# for index, title in enumerate(items):
 		# 	AppendMenu(self.menu, win32con.MF_STRING, (1023 + index), title)
 	def onTaskbarNotify(self, hwnd, msg, wparam, lparam):
+		print win32con.WM_MOUSEHOVER
 		if lparam == win32con.WM_USER+5:
 			self.onBalloonClick(hwnd, msg, wparam, lparam)
 		elif lparam == win32con.WM_LBUTTONUP:
@@ -115,6 +116,11 @@ class TrayIcon:
 				win32gui.TrackPopupMenu(self.menu, win32con.TPM_LEFTALIGN, x, y, 0, hwnd, None)
 				win32gui.PostMessage(hwnd, win32con.WM_NULL, 0, 0)
 			# self.onRightClick(hwnd, msg, wparam, lparam)
+		# elif lparam == win32con.WM_MOUSEMOVE:
+		# 	pos = win32api.GetWindowPos()
+		# 	print pos
+
+		# 	self.onMouseHover(hwnd, msg, wparam, lparam)
 
 		return 1
 	def onCommand(self, hwnd, msg, wparam, lparam):
@@ -137,4 +143,6 @@ class TrayIcon:
 	def onRightClick(self, hwnd, msg, wparam, lparam):
 		pass
 	def onBalloonClick(self, hwnd, msg, wparam, lparam):
+		pass
+	def onMouseHover(self, hwnd, msg, wparam, lparam):
 		pass
